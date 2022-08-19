@@ -1,17 +1,24 @@
 <template>
   <div id="app">
+    <NavBar></NavBar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
-
+import NavBar from './components/NavBar.vue'
 export default {
-  name: 'App'
+  name: 'App',
+  components:{
+    NavBar
+  }
 }
 </script>
 <style>
 #app{
 text-align:center;
+}
+.nav{
+  padding: 10px 15px;
 }
 </style>
