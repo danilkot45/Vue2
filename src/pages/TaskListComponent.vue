@@ -1,5 +1,5 @@
 <template>
-<h1>Tasklist page</h1>
+    <h1>Tasklist page</h1>
 </template>
 
 <script>

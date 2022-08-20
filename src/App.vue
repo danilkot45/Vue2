@@ -9,16 +9,19 @@
 import NavBar from './components/NavBar.vue'
 export default {
   name: 'App',
-  components:{
+  components: {
     NavBar
   }
 }
 </script>
+
 <style>
-#app{
-text-align:center;
+#app {
+  text-align: center;
 }
-.nav{
+.nav {
   padding: 10px 15px;
 }
+@import '../public/css/style.css';
+@import '../public/css/bootstrap.min.css';
 </style>
