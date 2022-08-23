@@ -30,14 +30,9 @@ export default {
 </script>
 
 <style>
-#app {
-  text-align: center;
-}
-
 .nav {
   padding: 10px 15px;
 }
-
 @import '../public/css/style.css';
 @import '../public/css/bootstrap.min.css';
 </style>

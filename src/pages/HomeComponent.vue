@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="inputForm">
         <h1>СПИСОК ЗАДАЧ📝 </h1>
         <div v-if="state" class="news">
             <h3>ИТОГОВЫЕ ВОЗМОЖНОСТИ ПРИЛОЖЕНИЯ📲</h3>
@@ -91,6 +91,128 @@ export default {
 }
 </script>
 <style>
+.main-agileinfo {
+    width: 35%;
+    margin: 3em auto;
+    background: rgba(0, 0, 0, 0.18);
+    background-size: cover;
+}
+
+.agileits-top {
+    padding: 3em;
+}
+.text{
+    font-size: 0.9em;
+    color: #fff;
+    font-weight: 100;
+    width: 100%;
+    display: block;
+    border: none;
+    padding: 0.8em;
+    border: solid 1px rgba(255, 255, 255, 0.37);
+    transition: all 0.3s cubic-bezier(0.64, 0.09, 0.08, 1);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 96%, #fff 4%);
+    background-position: -800px 0;
+    background-size: 100%;
+    background-repeat: no-repeat;
+    color: #fff;
+}
+
+
+.text:focus,
+.text:valid {
+    box-shadow: none;
+    outline: none;
+    background-position: 0 0;
+}
+
+
+
+input::placeholder {
+    color: #fff;
+    font-weight: 100;
+}
+
+.agileits-top p {
+    font-size: 1em;
+    color: #fff;
+    text-align: center;
+    letter-spacing: 1px;
+    font-weight: 300;
+}
+
+.agileits-top p a {
+    color: #fff;
+    -webkit-transition: .5s all;
+    -moz-transition: .5s all;
+    transition: .5s all;
+    font-weight: 400;
+}
+
+.agileits-top p a:hover {
+    color: #76b852;
+}
+
+@media(max-width:480px) {
+
+    .agileits-top {
+        padding: 1.8em;
+    }
+
+.text {
+        width: 100%;
+    }
+
+    .agileits-top p {
+        font-size: 0.9em;
+    }
+}
+
+@media(max-width:414px) {
+    .main-agileinfo {
+        width: 85%;
+        margin: 1.5em auto;
+    }
+}
+
+@media(max-width:384px) {
+    .main-agileinfo {
+        width: 88%;
+    }
+
+    .colorlibcopy-agile p {
+        padding: 0 1em;
+    }
+}
+
+@media(max-width:320px) {
+
+.text {
+        width: 100%;
+        font-size: 0.85em;
+    }
+}
+.form__field {
+    margin-bottom: 10px;
+  }
+  
+  .form__error {
+    color: red;
+    text-align: left;
+    font-size: 12px;
+    display: block;
+    margin-top: 3px;
+    display: none;
+  }
+  input:invalid:not(:placeholder-shown) {
+    border-color: red;
+  }
+  input:invalid:not(:placeholder-shown) + .form__error {
+    display: block;
+  }
+.inputForm{
+text-align: center;
+}
 li {
     font-size: 20px;
     list-style-type: none;
