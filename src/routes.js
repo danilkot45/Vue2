@@ -18,11 +18,21 @@ export default new VueRouter({
         },
         {
             path: '/tasklist',
-            component: Tasklist
+            component: Tasklist,
+            beforeEnter(to, from, next) {
+                if (localStorage.getItem("entry") === 'true') {
+                    next();
+                }
+            }
         },
         {
             path: '/tasklist/:id',
-            component: Task
+            component: Task,
+            beforeEnter(to, from, next) {
+                if (localStorage.getItem("entry") === 'true') {
+                    next();
+                }
+            }
         },
         {
             path: '*',
