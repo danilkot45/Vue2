@@ -1,28 +1,12 @@
 {
-    "todos": [
-      {
-        "id": "12345",
-        "title": "Задача из БД 1",
-        "desc": "description task1",
-        "created": "",
-        "updated": "",
-        "done": true
-      },
-      {
-        "id": "23456",
-        "title": "Задача из БД 2",
-        "desc": "description task2",
-        "created": "",
-        "updated": "",
-        "done": false
-      },
-      {
-        "id": "34567",
-        "title": "Задача из БД 3",
-        "desc": "description task3",
-        "created": "",
-        "updated": "",
-        "done": false
-      }
-    ]
-  } 
+  "todos": [
+    {
+      "id": "2022-08-24T18:44:55.436Z",
+      "title": "task 5: Выполнил все задания😍",
+      "desc": "",
+      "created": "2022-08-24T18:44:55.436Z",
+      "updated": "",
+      "done": true
+    }
+  ]
+}

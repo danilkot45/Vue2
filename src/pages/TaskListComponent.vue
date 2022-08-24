@@ -18,25 +18,15 @@
         <br>
         <h2 v-show="this.todoItems.length == 0">{{ titleAdd }}</h2>
         <ul class="list-group">
-            <TodoList v-for="(i, index) in todoList" :key="index" :id="index" @click="i.done = !i.done" :value="i.text"
-                @textarea="i.text = $event" :btntext="btnText(index)"
-                :color="i.done ? 'btn btn-success' : 'btn btn-secondary'" @delete="removeTask(index)">
+            <TodoList v-for="(i, index) in filterTodoItems" :key="index" :id="index" @click="i.done = !i.done" :value="i.title"
+                @textarea="i.title = $event" :btntext="btnText(index)"
+                :color="i.done ? 'btn btn-success' : 'btn btn-secondary'" @delete="removeTask(i.id, index)">
                 <router-link tag="button" class="btn btn-info"
-                    :to="{ path: '/tasklist/' + (index + 1), query: { title: i.text, statusTask: i.done ? 'Выполнено😍😃' : 'Не выполнено😫' } }">
-                    ⌽</router-link>
+                    :to="{ path: '/tasklist/' + (index + 1), query: { title: i.title, statusTask: i.done ? 'Выполнено😍😃' : 'Не выполнено😫' } }">⌽</router-link>
             </TodoList>
             <span v-scroll-end class="knopka"><a>Наверх</a></span>
         </ul>
-        <ul class="list-group">
-            <TodoList v-for="(i, index) in todos" :key="index" :id="index" @click="i.done = !i.done" :value="i.title"
-                @textarea="i.title = $event" :btntext="btnTextServer(index)"
-                :color="i.done ? 'btn btn-success' : 'btn btn-secondary'" @delete="removeTask(index)">
-                <router-link tag="button" class="btn btn-info"
-                    :to="{ path: '/tasklist/' + (i.id), query: { title: i.title, statusTask: i.done ? 'Выполнено😍😃' : 'Не выполнено😫' } }">
-                    ⌽</router-link>
-            </TodoList>
-            <span v-scroll-end class="knopka"><a>Наверх</a></span>
-        </ul>
+
     </div>
 </template>
 <script>
@@ -45,7 +35,7 @@ import TodoList from '../components/TodoList.vue'
 import Statistics from '../components/Statistics.vue'
 import axios from "axios"
 
-const baseUrl = "http://localhost:3001/todos"
+const baseUrl = "http://localhost:3001/todos/"
 export default {
     name: 'AppLessonTwo',
     data() {
@@ -62,7 +52,6 @@ export default {
             count: 0,
             radioState: "",
             titleAdd: 'Please add new task'
-
         }
     },
     computed: {
@@ -81,11 +70,10 @@ export default {
         completeTasklist() {
             return this.allTasks === 0 ? '0 %' : (this.count / (this.allTasks) * 100).toFixed(2) + '%'
         },
-        todoList() {
+        filterTodoItems() {
             var vm = this
-
             let sortList = this.todoItems.filter(function (i) {
-                return i.text.toLowerCase().indexOf(vm.searchTitle.toLowerCase()) !== -1
+                return i.title.toLowerCase().indexOf(vm.searchTitle.toLowerCase()) !== -1
             })
             if (this.radioState === "completed") {
                 return sortList.filter(function (i) { return i.done })
@@ -96,39 +84,57 @@ export default {
             }
         }
     },
-    async created() {
-        try {
-            const res = await axios.get(baseUrl)
-            this.todos = res.data
-            console.log(this.todos)
-        } catch (e) {
-            console.log(e)
-        }
-    },
     methods: {
-        btnText(id) {
-            localStorage.setItem('todoItems', JSON.stringify(this.todoItems));
-            return this.todoList[id].done ? 'completed' : 'in order'
+        async putTask(editTask, done, title) {
+            await axios.put(baseUrl + editTask.id, {
+                ...editTask, done: done, title: title
+            });
         },
-        btnTextServer(id) {
-            return this.todos[id].done ? 'completed' : 'in order'
+        btnText(id) {
+            let txt;
+            if (this.todoItems[id].done) {
+                txt = 'completed'
+                this.putTask(this.todoItems[id], this.todoItems[id].done, this.todoItems[id].title)
+            } else {
+                txt = 'in order'
+                this.putTask(this.todoItems[id], this.todoItems[id].done, this.todoItems[id].title)
+            }
+            return txt
+        },
+        async postTasks() {
+            const res = await axios.post(baseUrl, {
+                id: new Date(),
+                title: this.newTitle,
+                desc: "",
+                created: new Date(),
+                updated: "",
+                done: false,
+            })
+            this.getTasks()
+        },
+        async getTasks() {
+            try {
+                const res = await axios.get(baseUrl)
+                this.todoItems = res.data
+            } catch (e) {
+                console.log(e)
+            }
         },
         addTask() {
-            this.todoItems.push({
-                id: new Date(),
-                text: this.newTitle,
-                done: false
-            })
-            // console.log(this.newTitle)
-            // console.log(this.todoItems)
-            // console.log(this.todoList)
+            this.postTasks()
             this.newTitle = ''
-            localStorage.setItem('todoItems', JSON.stringify(this.todoItems));
         },
-        removeTask(index) {
+        async delTask(id) {
+            try {
+                await axios.delete(baseUrl + id);
+            } catch (e) {
+                console.log(e);
+            }
+        },
+        removeTask(id, index) {
+            this.delTask(id)
             this.todoItems.splice(index, 1)
-            this.todos.splice(index, 1)
-            localStorage.setItem('todoItems', JSON.stringify(this.todoItems));
+
         }
     },
     components: {
@@ -137,10 +143,11 @@ export default {
         Statistics
     },
     mounted() {
-        let data = JSON.parse(localStorage.getItem('todoItems'));
-        if (data) {
-            this.todoItems = data;
-        }
+        this.getTasks()
+        // let data = JSON.parse(localStorage.getItem('todoItems'));
+        // if (data) {
+        //     this.todoItems = data;
+        // }
 
     }
 }

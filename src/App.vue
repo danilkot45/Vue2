@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <NavBar></NavBar>
-    <router-view :state="state" @entry="Entry()"></router-view>
+    <router-view></router-view>
   </div>
 </template>
 
@@ -11,20 +11,10 @@ export default {
   name: 'App',
   data() {
     return {
-      state: false
-    }
-  },
-  methods: {
-    Entry() {
-      this.state = true
-      localStorage.setItem('entry', true);
     }
   },
   components: {
     NavBar
-  },
-  mounted() {
-    localStorage.setItem('entry', false);
   }
 }
 </script>

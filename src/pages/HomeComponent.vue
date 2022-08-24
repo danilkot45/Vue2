@@ -1,7 +1,7 @@
 <template>
     <div class="inputForm">
         <h1>СПИСОК ЗАДАЧ📝 </h1>
-        <div v-if="state" class="news">
+        <div v-if="state === 'true'" class="news">
             <h3>ИТОГОВЫЕ ВОЗМОЖНОСТИ ПРИЛОЖЕНИЯ📲</h3>
             <ul>
                 <li>Создание/удаление/редактирование задач</li>
@@ -14,7 +14,7 @@
                 <li>Все данные хранятся на сервере</li>
             </ul>
         </div>
-        <div v-if="!state">
+        <div v-if="state === 'false'">
             <h2>🔐 ВОЙДИТЕ НА СВОЙ АККАУНТ,ЧТОБЫ УЗНАТЬ СВОЙ СПИСОК ДЕЛ</h2>
             <div class="main-agileinfo">
                 <div class="agileits-top">
@@ -42,17 +42,21 @@
 
 <script>
 export default {
-    props: {
-        state: Boolean
-    },
     data() {
         return {
             login: '',
             password: '',
             stateLogin: false,
-            statePassword: false
+            statePassword: false,
+            state: ''
 
         }
+    },
+    create() {
+        localStorage.entry = false
+    },
+    mounted() {
+        this.state = localStorage.entry
     },
     methods: {
         loginFunc() {
@@ -82,7 +86,7 @@ export default {
             return this.stateLogin && this.statePassword
         },
         clickButton() {
-            this.$emit("entry");
+            localStorage.setItem('entry', true);
             setTimeout(() => {
                 this.$router.push("/tasklist")
             }, 500);
@@ -101,7 +105,8 @@ export default {
 .agileits-top {
     padding: 3em;
 }
-.text{
+
+.text {
     font-size: 0.9em;
     color: #fff;
     font-weight: 100;
@@ -159,7 +164,7 @@ input::placeholder {
         padding: 1.8em;
     }
 
-.text {
+    .text {
         width: 100%;
     }
 
@@ -187,32 +192,37 @@ input::placeholder {
 
 @media(max-width:320px) {
 
-.text {
+    .text {
         width: 100%;
         font-size: 0.85em;
     }
 }
+
 .form__field {
     margin-bottom: 10px;
-  }
-  
-  .form__error {
+}
+
+.form__error {
     color: red;
     text-align: left;
     font-size: 12px;
     display: block;
     margin-top: 3px;
     display: none;
-  }
-  input:invalid:not(:placeholder-shown) {
-    border-color: red;
-  }
-  input:invalid:not(:placeholder-shown) + .form__error {
-    display: block;
-  }
-.inputForm{
-text-align: center;
 }
+
+input:invalid:not(:placeholder-shown) {
+    border-color: red;
+}
+
+input:invalid:not(:placeholder-shown)+.form__error {
+    display: block;
+}
+
+.inputForm {
+    text-align: center;
+}
+
 li {
     font-size: 20px;
     list-style-type: none;
