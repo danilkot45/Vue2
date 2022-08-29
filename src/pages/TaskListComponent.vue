@@ -16,10 +16,10 @@
         <input v-model="searchTitle" placeholder="🔎"> <span style="margin:0 10px; color: white">📍Если хотите отредактировать задачу, то нажмите на текст и редактируйте!</span>
         <br>
         <br>
-        <h2 v-show="this.todoItems.length == 0">{{ titleAdd }}</h2>
+        <h2 v-show="this.filterTodoItems.length == 0">{{ titleAdd }}</h2>
         <ul class="list-group">
-            <TodoList v-for="(i, index) in filterTodoItems" :key="index" :id="index" @click="i.done = !i.done" :value="i.title"
-                @textarea="i.title = $event" :btntext="btnText(index)"
+            <TodoList v-for="(i, index) in filterTodoItems" :key="index" :id="index" @click="i.done=!i.done,changeDone(i.id,i.done)" :value="i.title"
+                @textarea="i.title = $event,changeTitle(i.id,i.title)" :btntext="btnText(index)"
                 :color="i.done ? 'btn btn-success' : 'btn btn-secondary'" @delete="removeTask(i.id, index)">
                 <router-link tag="button" class="btn btn-info"
                     :to="{ path: '/tasklist/' + (index + 1), query: { title: i.title, statusTask: i.done ? 'Выполнено😍😃' : 'Не выполнено😫' } }">⌽</router-link>
@@ -33,9 +33,7 @@
 import Form from '../components/Form.vue'
 import TodoList from '../components/TodoList.vue'
 import Statistics from '../components/Statistics.vue'
-import axios from "axios"
 
-const baseUrl = "http://localhost:3001/todos/"
 export default {
     name: 'AppLessonTwo',
     data() {
@@ -56,12 +54,12 @@ export default {
     },
     computed: {
         allTasks() {
-            return this.todoItems.length;
+            return this.$store.getters.showAllTodoItems.length;
         },
         completedTasks() {
             this.count = 0
-            for (let i in this.todoItems) {
-                if (this.todoItems[i].done === true) {
+            for (let i in this.$store.getters.showAllTodoItems) {
+                if (this.$store.getters.showAllTodoItems[i].done === true) {
                     this.count++
                 }
             }
@@ -72,7 +70,7 @@ export default {
         },
         filterTodoItems() {
             var vm = this
-            let sortList = this.todoItems.filter(function (i) {
+            let sortList = this.$store.getters.showAllTodoItems.filter(function (i) {
                 return i.title.toLowerCase().indexOf(vm.searchTitle.toLowerCase()) !== -1
             })
             if (this.radioState === "completed") {
@@ -85,56 +83,27 @@ export default {
         }
     },
     methods: {
-        async putTask(editTask, done, title) {
-            await axios.put(baseUrl + editTask.id, {
-                ...editTask, done: done, title: title
-            });
+        changeTitle(id,title){
+            this.$store.dispatch("changeTitle", [id,title]);
         },
-        btnText(id) {
+        changeDone(id,done){
+            this.$store.dispatch("changeDone", [id,done]);
+        },
+        btnText(index) {
             let txt;
-            if (this.todoItems[id].done) {
+            if (this.filterTodoItems[index].done) {
                 txt = 'completed'
-                this.putTask(this.todoItems[id], this.todoItems[id].done, this.todoItems[id].title)
             } else {
                 txt = 'in order'
-                this.putTask(this.todoItems[id], this.todoItems[id].done, this.todoItems[id].title)
             }
             return txt
         },
-        async postTasks() {
-            const res = await axios.post(baseUrl, {
-                id: new Date(),
-                title: this.newTitle,
-                desc: "",
-                created: new Date(),
-                updated: "",
-                done: false,
-            })
-            this.getTasks()
-        },
-        async getTasks() {
-            try {
-                const res = await axios.get(baseUrl)
-                this.todoItems = res.data
-            } catch (e) {
-                console.log(e)
-            }
-        },
         addTask() {
-            this.postTasks()
+            this.$store.dispatch("fetchPost",this.newTitle);
             this.newTitle = ''
         },
-        async delTask(id) {
-            try {
-                await axios.delete(baseUrl + id);
-            } catch (e) {
-                console.log(e);
-            }
-        },
         removeTask(id, index) {
-            this.delTask(id)
-            this.todoItems.splice(index, 1)
-
+            this.$store.dispatch("delTask",[id,index]);
         }
     },
     components: {
@@ -143,12 +112,7 @@ export default {
         Statistics
     },
     mounted() {
-        this.getTasks()
-        // let data = JSON.parse(localStorage.getItem('todoItems'));
-        // if (data) {
-        //     this.todoItems = data;
-        // }
-
+        this.$store.dispatch("getTasks");
     }
 }
 </script>

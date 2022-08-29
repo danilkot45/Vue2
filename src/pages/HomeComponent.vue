@@ -29,7 +29,7 @@
                             <input ref="success2" class="text" type="password" name="password" placeholder="Password"
                                 v-model="password" @blur="passwordFunc()" required="">
                             <span ref="err2" class="form__error">Это поле должно содержать пароль в формате
-                                Example123!</span>
+                                Example123</span>
                         </div>
                         <button :class="changeButton() ? 'btn btn-success' : 'btn btn-secondary'"
                             :disabled="!changeButton()" @click="clickButton()"> Войти</button>
