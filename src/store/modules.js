@@ -46,6 +46,10 @@ export default {
                 updated: new Date()
               }
             );
+          },
+         async titleSearch(ctx,text){
+            const searchTitle = text
+           ctx.commit('titleSearch',searchTitle)
           }
     },
     mutations: {
@@ -57,14 +61,34 @@ export default {
         },
         deleteTask(state,index){
             return state.todoItems.splice(index, 1)
+        },
+        titleSearch(state,searchTitle){
+            state.searchTitle = searchTitle
         }
     },
     state: {
-        todoItems: []
+        todoItems: [],
+        searchTitle:""
     },
     getters: {
         showAllTodoItems(state) {
-            return state.todoItems
+            let sortList = state.todoItems.filter(function (i) {
+                return i.title.toLowerCase().indexOf(state.searchTitle.toLowerCase()) !== -1
+            })
+            return sortList
+        },
+
+        completedTasks(state){
+            let sortList = state.todoItems.filter(function (i) {
+                return i.title.toLowerCase().indexOf(state.searchTitle.toLowerCase()) !== -1
+            })
+            return sortList.filter(function (i) { return i.done })
+        },
+        uncompletedTasks(state){
+            let sortList = state.todoItems.filter(function (i) {
+                return i.title.toLowerCase().indexOf(state.searchTitle.toLowerCase()) !== -1
+            })
+            return sortList.filter(function (i) { return !i.done })
         }
     }
 }

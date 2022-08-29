@@ -68,17 +68,18 @@ export default {
         completeTasklist() {
             return this.allTasks === 0 ? '0 %' : (this.count / (this.allTasks) * 100).toFixed(2) + '%'
         },
+        titleSearch(){
+            return this.$store.dispatch("titleSearch",this.searchTitle);
+        },
+
         filterTodoItems() {
-            var vm = this
-            let sortList = this.$store.getters.showAllTodoItems.filter(function (i) {
-                return i.title.toLowerCase().indexOf(vm.searchTitle.toLowerCase()) !== -1
-            })
+            this.titleSearch
             if (this.radioState === "completed") {
-                return sortList.filter(function (i) { return i.done })
+                return this.$store.getters.completedTasks
             } else if (this.radioState === "uncompleted") {
-                return sortList.filter(function (i) { return !i.done })
+                return this.$store.getters.uncompletedTasks
             } else {
-                return sortList
+                return this.$store.getters.showAllTodoItems
             }
         }
     },
