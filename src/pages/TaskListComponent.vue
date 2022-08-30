@@ -47,26 +47,19 @@ export default {
                 { id: "option3", change: "uncompleted", classes: "btn btn-outline-secondary", check: false, title: "Невыполненные задачи ☠️" }],
             newTitle: '',
             searchTitle: '',
-            count: 0,
             radioState: "",
             titleAdd: 'Please add new task'
         }
     },
     computed: {
         allTasks() {
-            return this.$store.getters.showAllTodoItems.length;
+            return this.$store.getters.countAllTasks;
         },
         completedTasks() {
-            this.count = 0
-            for (let i in this.$store.getters.showAllTodoItems) {
-                if (this.$store.getters.showAllTodoItems[i].done === true) {
-                    this.count++
-                }
-            }
-            return this.count
+            return this.$store.getters.countCompletedTasks;
         },
         completeTasklist() {
-            return this.allTasks === 0 ? '0 %' : (this.count / (this.allTasks) * 100).toFixed(2) + '%'
+            return this.$store.getters.completeTasklist
         },
         titleSearch(){
             return this.$store.dispatch("titleSearch",this.searchTitle);

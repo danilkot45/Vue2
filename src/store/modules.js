@@ -71,6 +71,21 @@ export default {
         searchTitle:""
     },
     getters: {
+        countAllTasks(state){
+            return state.todoItems.length
+        },
+        countCompletedTasks(state){
+             let count = 0
+            for (let i in state.todoItems) {
+                if (state.todoItems[i].done) {
+                    count++
+                }
+            }
+            return count
+        },
+        completeTasklist(state, getters){
+            return getters.countAllTasks === 0 ? '0 %' : (getters.countCompletedTasks / (getters.countAllTasks) * 100).toFixed(2) + '%'
+        },
         showAllTodoItems(state) {
             let sortList = state.todoItems.filter(function (i) {
                 return i.title.toLowerCase().indexOf(state.searchTitle.toLowerCase()) !== -1
